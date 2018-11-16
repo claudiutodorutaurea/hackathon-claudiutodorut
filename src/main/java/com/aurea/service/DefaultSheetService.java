@@ -131,7 +131,8 @@ public class DefaultSheetService implements SheetService {
                                 .hourPerDay(rowItem.get(4)).deepWorkBlock(rowItem.get(5)).devTime(rowItem.get(6))
                                 .dailyCic(rowItem.get(7)).intensityFocus(rowItem.get(8))
                                 .blockWorkLess(Integer.valueOf(rowItem.get(9))).checkInChatCompliance(rowItem.get(10))
-                                .build();
+                                .actualIntensity(Double.valueOf(rowItem.get(11)))
+                                .actualFocus(Double.valueOf(rowItem.get(12))).build();
                         items.add(item);
                     }
                 }
