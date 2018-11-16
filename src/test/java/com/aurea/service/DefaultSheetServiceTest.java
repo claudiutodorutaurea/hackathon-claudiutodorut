@@ -85,12 +85,8 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
         when(sheetClient.readSheetData(Arrays.asList(SHEET_NAME))).thenReturn(Optional.ofNullable(batchRead));
         when(groupingService.getGrouping(settings.getTeamId(), date)).thenReturn(groups);
         final List<List<Object>> values = Arrays.asList(Arrays.asList(candidate.getId(), candidate.getPrintableName(),
-                manager.getPrintableName(), date, YES, NO, YES, NO, YES, 6, NO));
-        final List<ValueRange> valueRangeList = new ArrayList<>();
-        final ValueRange valueRange = new ValueRange();
-        valueRange.setRange("A2");
-        valueRange.setValues(values);
-        valueRangeList.add(valueRange);
+                manager.getPrintableName(), date, YES, NO, YES, NO, YES, 6, NO, 90d, 90d));
+        final List<ValueRange> valueRangeList = createValuesRange(values);
 
         // Act
         sheetService.writeContentSheet(date);
@@ -134,12 +130,8 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
         when(sheetClient.readSheetData(Arrays.asList(SHEET_NAME))).thenReturn(Optional.ofNullable(batchRead));
         when(groupingService.getGrouping(settings.getTeamId(), date)).thenReturn(groups);
         final List<List<Object>> values = Arrays.asList(Arrays.asList(candidate.getId(), candidate.getPrintableName(),
-                manager.getPrintableName(), date, YES, YES, YES, YES, YES, 6, YES));
-        final List<ValueRange> valueRangeList = new ArrayList<>();
-        final ValueRange valueRange = new ValueRange();
-        valueRange.setRange("A2");
-        valueRange.setValues(values);
-        valueRangeList.add(valueRange);
+                manager.getPrintableName(), date, YES, YES, YES, YES, YES, 6, YES, 90d, 90d));
+        final List<ValueRange> valueRangeList = createValuesRange(values);
 
         // Act
         sheetService.writeContentSheet(date);
@@ -182,7 +174,7 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
         when(sheetClient.readSheetData(Arrays.asList(SHEET_NAME))).thenReturn(Optional.ofNullable(batchRead));
         when(groupingService.getGrouping(settings.getTeamId(), date)).thenReturn(groups);
         final List<List<Object>> values = Arrays.asList(Arrays.asList(candidate.getId(), candidate.getPrintableName(),
-                manager.getPrintableName(), date, YES, YES, YES, YES, NO, 6, YES));
+                manager.getPrintableName(), date, YES, YES, YES, YES, NO, 6, YES, 90d, 90d));
         final List<ValueRange> valueRangeList = new ArrayList<>();
         final ValueRange valueRange = new ValueRange();
         valueRange.setRange("A2");
@@ -231,12 +223,8 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
         when(sheetClient.readSheetData(Arrays.asList(SHEET_NAME))).thenReturn(Optional.ofNullable(batchRead));
         when(groupingService.getGrouping(settings.getTeamId(), date)).thenReturn(groups);
         final List<List<Object>> values = Arrays.asList(Arrays.asList(candidate.getId(), candidate.getPrintableName(),
-                manager.getPrintableName(), date, YES, YES, YES, YES, NO, 6, YES));
-        final List<ValueRange> valueRangeList = new ArrayList<>();
-        final ValueRange valueRange = new ValueRange();
-        valueRange.setRange("A2");
-        valueRange.setValues(values);
-        valueRangeList.add(valueRange);
+                manager.getPrintableName(), date, YES, YES, YES, YES, NO, 6, YES, 90d, 90d));
+        final List<ValueRange> valueRangeList = createValuesRange(values);
 
         // Act
         sheetService.writeContentSheet(date);
@@ -280,18 +268,68 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
         when(sheetClient.readSheetData(Arrays.asList(SHEET_NAME))).thenReturn(Optional.ofNullable(batchRead));
         when(groupingService.getGrouping(settings.getTeamId(), date)).thenReturn(groups);
         final List<List<Object>> values = Arrays.asList(Arrays.asList(candidate.getId(), candidate.getPrintableName(),
-                manager.getPrintableName(), date, YES, YES, NO, YES, YES, 6, YES));
-        final List<ValueRange> valueRangeList = new ArrayList<>();
-        final ValueRange valueRange = new ValueRange();
-        valueRange.setRange("A2");
-        valueRange.setValues(values);
-        valueRangeList.add(valueRange);
+                manager.getPrintableName(), date, YES, YES, NO, YES, YES, 6, YES, 90d, 90d));
+        final List<ValueRange> valueRangeList = createValuesRange(values);
 
         // Act
         sheetService.writeContentSheet(date);
 
         // Assert
         verify(sheetClient).updateSheetData(valueRangeList);
+    }
+    
+    @Test
+    public void writeContentSheetWrongDevelopmentTime() {
+        // Arrange
+        final SheetService sheetService = new DefaultSheetService(sheetClient, groupingService, checkInChatService,
+                candidateSettings, settings);
+        when(candidateSettings.getIntensityScore()).thenReturn(90);
+        when(candidateSettings.getFocusScore()).thenReturn(90);
+        when(candidateSettings.getDeepWorkBlock()).thenReturn(4);
+        when(candidateSettings.getWorkBlocksLess()).thenReturn(6);
+        when(candidateSettings.getDevTime()).thenReturn(70);
+        final String date = "date";
+        final long assignmentId = 10L;
+        final CheckInChat[] checkInChats = createCheckingChatDone(assignmentId);
+        when(checkInChatService.getCheckInChat(settings.getTeamId(), date, date)).thenReturn(checkInChats);
+        final Group[] groups = new Group[1];
+        groups[0] = new Group();
+        final Candidate candidate = createCandidate();
+        final Manager manager = createManager();
+        final Assignment assignment = createAssignment(assignmentId, candidate, manager);
+        groups[0].setAssignment(assignment);
+        final AssignmentHistory assignmentHistory = createAssignmentHistory(manager);
+        groups[0].setAssignmentHistory(assignmentHistory);
+        final DayActivitiesTime dayActivitiesTime = new DayActivitiesTime();
+        final ContractorTimeSlots[] contractorTimeSlots = createContractorTimeSlots();
+        dayActivitiesTime.setContractorTimeSlots(contractorTimeSlots);
+        groups[0].setDayActivitiesTime(dayActivitiesTime);
+        final AdvancedGroups[] advancedGroups = createAdvancedGroupsLessDevelopment();
+        final Grouping grouping = createGrouping(advancedGroups);
+        groups[0].setGrouping(grouping);
+        final BatchGetValuesResponse batchRead = new BatchGetValuesResponse();
+        final List<ValueRange> valueRanges = Collections.emptyList();
+        batchRead.setValueRanges(valueRanges);
+        when(sheetClient.readSheetData(Arrays.asList(SHEET_NAME))).thenReturn(Optional.ofNullable(batchRead));
+        when(groupingService.getGrouping(settings.getTeamId(), date)).thenReturn(groups);
+        final List<List<Object>> values = Arrays.asList(Arrays.asList(candidate.getId(), candidate.getPrintableName(),
+                manager.getPrintableName(), date, YES, YES, NO, YES, YES, 6, YES, 90d, 90d));
+        final List<ValueRange> valueRangeList = createValuesRange(values);
+
+        // Act
+        sheetService.writeContentSheet(date);
+
+        // Assert
+        verify(sheetClient).updateSheetData(valueRangeList);
+    }
+
+    private List<ValueRange> createValuesRange(final List<List<Object>> values) {
+        final List<ValueRange> valueRangeList = new ArrayList<>();
+        final ValueRange valueRange = new ValueRange();
+        valueRange.setRange("A2");
+        valueRange.setValues(values);
+        valueRangeList.add(valueRange);
+        return valueRangeList;
     }
 
     private CheckInChat[] createCheckingChatDone(final long assignmentId) {
@@ -338,6 +376,17 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
         advancedGroups[0] = new AdvancedGroups();
         advancedGroups[0].setSectionName("Office");
         advancedGroups[0].setSpentTime(400d);
+        return advancedGroups;
+    }
+    
+    private AdvancedGroups[] createAdvancedGroupsLessDevelopment() {
+        final AdvancedGroups[] advancedGroups = new AdvancedGroups[2];
+        advancedGroups[0] = new AdvancedGroups();
+        advancedGroups[0].setSectionName("Office");
+        advancedGroups[0].setSpentTime(200d);
+        advancedGroups[1] = new AdvancedGroups();
+        advancedGroups[1].setSectionName("Development");
+        advancedGroups[1].setSpentTime(300d);
         return advancedGroups;
     }
 

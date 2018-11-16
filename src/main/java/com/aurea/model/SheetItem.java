@@ -39,4 +39,10 @@ public class SheetItem {
     
     @Exclude
     private final String checkInChatCompliance;
+    
+    @Exclude
+    private final Double actualIntensity;
+    
+    @Exclude
+    private final Double actualFocus;
 }

@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultSheetService implements SheetService {
 
-    private static final String RANGE = "!A2:K";
+    private static final String RANGE = "!A2:M";
     private static final String VALUES = "values";
     private static final int HOUR_MINUTES = 60;
     private static final String DEVELOPMENT = "Development";
@@ -92,10 +92,12 @@ public class DefaultSheetService implements SheetService {
             final String checkInChatCompliance = Utils
                     .convertToYesNo(Utils.getCheckInChatCompliant(checkInChats, assignment.getId()));
             final int blockWorkLess = workBlocksLessThan1HourCount(dayActivitiesTime);
+            final Double actualFocus = group.getGrouping().getFocusScore();
+            final Double actualIntensity = group.getGrouping().getIntensityScore();
             final SheetItem item = SheetItem.builder().candidateId(candidateId).candidateName(candidateName)
                     .managerName(managerName).date(date).hourPerDay(hourPerDay).deepWorkBlock(deepWorkBlock)
                     .devTime(devTime).dailyCic(dailyCic).intensityFocus(intensityFocus).blockWorkLess(blockWorkLess)
-                    .checkInChatCompliance(checkInChatCompliance).build();
+                    .checkInChatCompliance(checkInChatCompliance).actualIntensity(actualIntensity).actualFocus(actualFocus).build();
             items.add(item);
         }
         items.addAll(readSheetItems());
@@ -138,11 +140,12 @@ public class DefaultSheetService implements SheetService {
     private void writeSheetData(final List<ValueRange> data, final List<SheetItem> items) {
         for (int i = 0; i < items.size(); i++) {
             final SheetItem item = items.get(i);
-            data.add(new ValueRange().setRange("A" + (i + 2))
+            final ValueRange valueRange = new ValueRange();
+            data.add(valueRange.setRange("A" + (i + 2))
                     .setValues(Arrays.asList(Arrays.asList(item.getCandidateId(), item.getCandidateName(),
                             item.getManagerName(), item.getDate(), item.getHourPerDay(), item.getDeepWorkBlock(),
                             item.getDevTime(), item.getDailyCic(), item.getIntensityFocus(), item.getBlockWorkLess(),
-                            item.getCheckInChatCompliance()))));
+                            item.getCheckInChatCompliance(), item.getActualIntensity(), item.getActualFocus()))));
         }
         sheetClient.updateSheetData(data);
     }
