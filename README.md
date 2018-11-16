@@ -1,9 +1,9 @@
 # hackathon1 - claudiutodorut
 
-The project is calculating and displaying in a google spreadsheet the following:
+The project is calculating and displaying in a google spreadsheet the following columns:
 "IC ID", "IC Name", "IC SEM", "Day", "7 Hrs per day", "Deep Work Blocks", "Dev Time >70%", "Daily CiC", "Intensity - Focus 90%", "work blocks less than 1h", "Complient CiC",	"Actual Intensity", "Actual Focus".
 
-Were added extra parameters to be displayed: "Actual Intensity" and "Actual Focus".
+Were added extra columns to be displayed: "Actual Intensity" and "Actual Focus".
 
 All configuration is hold in application.yml file:
 application:
@@ -25,4 +25,9 @@ application:
     sheetName: Index
 
     
-Project is using google api for writing in google sheet.     
+Project is using google api for writing in google sheet.
+Data is writting in the following spreadsheet: https://docs.google.com/spreadsheets/d/1EuXuVLd1qioRBdypdtcTZ869QqKuz30r4yMbNwJ9cUA/edit#gid=0.
+
+This can be modified by changing "spreedsheetId" in the application.yml file.
+
+Note: Before starting the application it is needed that the spreedsheet to have created rows and have the same number and postion of the column as the spreadsheet above.
