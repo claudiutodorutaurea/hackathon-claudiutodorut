@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class GoogleSettings {
     private String spreedsheetId;
+    private String sheetName;
 }

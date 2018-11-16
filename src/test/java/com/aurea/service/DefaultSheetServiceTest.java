@@ -17,6 +17,7 @@ import com.aurea.dto.Grouping;
 import com.aurea.dto.Manager;
 import com.aurea.setting.CandidateSettings;
 import com.aurea.setting.CrossOverSettings;
+import com.aurea.setting.GoogleSettings;
 import com.google.api.services.sheets.v4.model.BatchGetValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -49,12 +51,20 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
 
     @Mock
     private CheckInChatService checkInChatService;
+    
+    @Mock
+    private GoogleSettings googleSettings;
+    
+    @Before
+    public void init() {
+        when(googleSettings.getSheetName()).thenReturn(SHEET_NAME);
+    }
 
     @Test
     public void writeContentSheetCheckInChatNotDone() {
         // Arrange
         final SheetService sheetService = new DefaultSheetService(sheetClient, groupingService, checkInChatService,
-                candidateSettings, settings);
+                candidateSettings, settings, googleSettings);
         when(candidateSettings.getIntensityScore()).thenReturn(90);
         when(candidateSettings.getFocusScore()).thenReturn(90);
         when(candidateSettings.getDeepWorkBlock()).thenReturn(3);
@@ -99,7 +109,7 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
     public void writeContentSheetCheckInChatDone() {
         // Arrange
         final SheetService sheetService = new DefaultSheetService(sheetClient, groupingService, checkInChatService,
-                candidateSettings, settings);
+                candidateSettings, settings, googleSettings);
         when(candidateSettings.getIntensityScore()).thenReturn(90);
         when(candidateSettings.getFocusScore()).thenReturn(90);
         when(candidateSettings.getDeepWorkBlock()).thenReturn(4);
@@ -144,7 +154,7 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
     public void writeContentSheetNoFocus() {
         // Arrange
         final SheetService sheetService = new DefaultSheetService(sheetClient, groupingService, checkInChatService,
-                candidateSettings, settings);
+                candidateSettings, settings, googleSettings);
         when(candidateSettings.getFocusScore()).thenReturn(91);
         when(candidateSettings.getDeepWorkBlock()).thenReturn(4);
         when(candidateSettings.getWorkBlocksLess()).thenReturn(6);
@@ -192,7 +202,7 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
     public void writeContentSheetNoIntensity() {
         // Arrange
         final SheetService sheetService = new DefaultSheetService(sheetClient, groupingService, checkInChatService,
-                candidateSettings, settings);
+                candidateSettings, settings, googleSettings);
         when(candidateSettings.getIntensityScore()).thenReturn(91);
         when(candidateSettings.getFocusScore()).thenReturn(90);
         when(candidateSettings.getDeepWorkBlock()).thenReturn(4);
@@ -237,7 +247,7 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
     public void writeContentSheetNoDevelopment() {
         // Arrange
         final SheetService sheetService = new DefaultSheetService(sheetClient, groupingService, checkInChatService,
-                candidateSettings, settings);
+                candidateSettings, settings, googleSettings);
         when(candidateSettings.getIntensityScore()).thenReturn(90);
         when(candidateSettings.getFocusScore()).thenReturn(90);
         when(candidateSettings.getDeepWorkBlock()).thenReturn(4);
@@ -282,7 +292,7 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
     public void writeContentSheetWrongDevelopmentTime() {
         // Arrange
         final SheetService sheetService = new DefaultSheetService(sheetClient, groupingService, checkInChatService,
-                candidateSettings, settings);
+                candidateSettings, settings, googleSettings);
         when(candidateSettings.getIntensityScore()).thenReturn(90);
         when(candidateSettings.getFocusScore()).thenReturn(90);
         when(candidateSettings.getDeepWorkBlock()).thenReturn(4);
@@ -327,7 +337,7 @@ public class DefaultSheetServiceTest extends BaseMockitoTest {
     public void writeContentSheetCheckinChatNotCompliant() {
         // Arrange
         final SheetService sheetService = new DefaultSheetService(sheetClient, groupingService, checkInChatService,
-                candidateSettings, settings);
+                candidateSettings, settings, googleSettings);
         when(candidateSettings.getIntensityScore()).thenReturn(90);
         when(candidateSettings.getFocusScore()).thenReturn(90);
         when(candidateSettings.getDeepWorkBlock()).thenReturn(4);

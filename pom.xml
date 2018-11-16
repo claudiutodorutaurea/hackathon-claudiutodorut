@@ -19,6 +19,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<tomcat.version>8.5.5</tomcat.version>
+		<google-api.version>1.23.0</google-api.version>
+		<google-api-services-sheets.version>v4-rev493-1.23.0</google-api-services-sheets.version>
 	</properties>
 
 	<dependencies>
@@ -31,17 +33,17 @@
 		<dependency>
 			<groupId>com.google.api-client</groupId>
 			<artifactId>google-api-client</artifactId>
-			<version>1.23.0</version>
+			<version>${google-api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.oauth-client</groupId>
 			<artifactId>google-oauth-client-jetty</artifactId>
-			<version>1.23.0</version>
+			<version>${google-api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.apis</groupId>
 			<artifactId>google-api-services-sheets</artifactId>
-			<version>v4-rev493-1.23.0</version>
+			<version>${google-api-services-sheets.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

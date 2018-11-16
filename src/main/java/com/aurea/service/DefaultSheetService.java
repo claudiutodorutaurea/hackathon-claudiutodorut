@@ -10,6 +10,7 @@ import com.aurea.dto.Group;
 import com.aurea.model.SheetItem;
 import com.aurea.setting.CandidateSettings;
 import com.aurea.setting.CrossOverSettings;
+import com.aurea.setting.GoogleSettings;
 import com.aurea.util.Utils;
 import com.google.api.services.sheets.v4.model.BatchGetValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
@@ -39,22 +40,23 @@ public class DefaultSheetService implements SheetService {
     private static final int HOUR_MINUTES = 60;
     private static final String DEVELOPMENT = "Development";
     private static final int FULL_PERCENTAGE = 100;
-    private static final String SHEET_NAME = "Index";
     public static final int ALLOWED_IDLE_TIME = 1;
     private final transient SheetClient sheetClient;
     private final transient GroupingService groupingService;
     private final transient CandidateSettings candidateSettings;
     private final transient CrossOverSettings settings;
     private final transient CheckInChatService checkInChatService;
+    private final transient GoogleSettings googleSettings;
 
     DefaultSheetService(final SheetClient sheetClient, final GroupingService groupingService,
             final CheckInChatService checkInChatService, final CandidateSettings candidateSettings,
-            final CrossOverSettings settings) {
+            final CrossOverSettings settings, final GoogleSettings googleSettings) {
         this.sheetClient = sheetClient;
         this.groupingService = groupingService;
         this.checkInChatService = checkInChatService;
         this.candidateSettings = candidateSettings;
         this.settings = settings;
+        this.googleSettings = googleSettings;
     }
 
     @Override
@@ -97,13 +99,14 @@ public class DefaultSheetService implements SheetService {
             final SheetItem item = SheetItem.builder().candidateId(candidateId).candidateName(candidateName)
                     .managerName(managerName).date(date).hourPerDay(hourPerDay).deepWorkBlock(deepWorkBlock)
                     .devTime(devTime).dailyCic(dailyCic).intensityFocus(intensityFocus).blockWorkLess(blockWorkLess)
-                    .checkInChatCompliance(checkInChatCompliance).actualIntensity(actualIntensity).actualFocus(actualFocus).build();
+                    .checkInChatCompliance(checkInChatCompliance).actualIntensity(actualIntensity)
+                    .actualFocus(actualFocus).build();
             items.add(item);
         }
         items.addAll(readSheetItems());
         final List<SheetItem> finalItems = new ArrayList<>(items);
         Collections.sort(finalItems, (o1, o2) -> o1.getCandidateName().compareTo(o2.getCandidateName()));
-        clearSheetData(SHEET_NAME + RANGE + items.size());
+        clearSheetData(googleSettings.getSheetName() + RANGE + items.size());
         writeSheetData(data, finalItems);
         log.info("Wrote in sheets {} items", data.size());
     }
@@ -114,7 +117,8 @@ public class DefaultSheetService implements SheetService {
 
     private Set<SheetItem> readSheetItems() {
         final Set<SheetItem> items = new HashSet<>();
-        final Optional<BatchGetValuesResponse> readSheetData = sheetClient.readSheetData(Arrays.asList(SHEET_NAME));
+        final Optional<BatchGetValuesResponse> readSheetData = sheetClient
+                .readSheetData(Arrays.asList(googleSettings.getSheetName()));
         if (readSheetData.isPresent()) {
             final List<ValueRange> valueRanges = readSheetData.get().getValueRanges();
             if (Objects.nonNull(valueRanges) && !valueRanges.isEmpty()) {

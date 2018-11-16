@@ -13,4 +13,5 @@ application:
     workBlocksLess: 6
     date: 2018-11-16
   google:
-    spreedsheetId: 1EuXuVLd1qioRBdypdtcTZ869QqKuz30r4yMbNwJ9cUA 
+    spreedsheetId: 1EuXuVLd1qioRBdypdtcTZ869QqKuz30r4yMbNwJ9cUA
+    sheetName: Index
