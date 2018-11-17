@@ -27,6 +27,9 @@ application:
     
 Project is using google api for writing in google sheet.
 Data is writting in the following spreadsheet: https://docs.google.com/spreadsheets/d/1EuXuVLd1qioRBdypdtcTZ869QqKuz30r4yMbNwJ9cUA/edit#gid=0.
+Spreedsheet contains scripts to create color with red the red item which are not ok and with green items which are good.
+Also it displaying an aggregate for intensity and focus and much more.
+
 
 This can be modified by changing "spreedsheetId" in the application.yml file.
 
