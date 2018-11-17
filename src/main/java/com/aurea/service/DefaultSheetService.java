@@ -156,6 +156,16 @@ public class DefaultSheetService implements SheetService {
     }
 
     private String getDeepWorkBlock(final DayActivitiesTime dayActivitiesTime) {
+        if (Objects.nonNull(dayActivitiesTime)) {
+            final ContractorTimeSlots[] contractorTimeSlots = dayActivitiesTime.getContractorTimeSlots();
+            if (Objects.nonNull(contractorTimeSlots)) {
+                final long countNull = Arrays.asList(contractorTimeSlots).stream().filter(s -> s == null).count();
+                if (countNull == contractorTimeSlots.length) {
+                    return Utils.convertToYesNo(false);
+                }
+            }
+        }
+
         final Map<Integer, List<ContractorTimeSlots>> blocks = getWorkBlocks(dayActivitiesTime);
         long counts = blocks.size();
         for (final List<ContractorTimeSlots> slots : blocks.values()) {
