@@ -1,12 +1,12 @@
 # hackathon1 - claudiutodorut
 
+Hackathon1
+
 The project is calculating and displaying in a google spreadsheet the following columns:
-"IC ID", "IC Name", "IC SEM", "Day", "7 Hrs per day", "Deep Work Blocks", "Dev Time >70%", "Daily CiC", "Intensity - Focus 90%", "work blocks less than 1h", "Complient CiC",	"Actual Intensity", "Actual Focus".
-
+"IC ID", "IC Name", "IC SEM", "Day", "7 Hrs per day", "Deep Work Blocks", "Dev Time >70%", "Daily CiC", "Intensity - Focus 90%", "work blocks less than 1h", "Complient CiC", "Actual Intensity", "Actual Focus".
 Were added extra columns to be displayed: "Actual Intensity" and "Actual Focus".
-
 All configuration is hold in application.yml file:
-application:
+“application:
   crossover:
     token: 430109:1564055978335:57f5167da6e473d9a1d41a9cf7b33dab
     teamId: 2952
@@ -22,15 +22,13 @@ application:
     date: 2018-11-16 (yy-mm-dd)
   google:
     spreedsheetId: 1EuXuVLd1qioRBdypdtcTZ869QqKuz30r4yMbNwJ9cUA
-    sheetName: Index
-
+    sheetName: Index”
     
 Project is using google api for writing in google sheet.
 Data is writing in the following spreadsheet: https://docs.google.com/spreadsheets/d/1EuXuVLd1qioRBdypdtcTZ869QqKuz30r4yMbNwJ9cUA/edit#gid=0.
-Spreedsheet contains scripts to create color with red the red item which are not ok and with green items which are good.
-Also it displaying an aggregate for intensity and focus and much more.
+Spreedsheet contains scripts to create color with red for the ICs which are compliant and with red for those which are not.
+Also it displaying an aggregate for intensity and focus for IC and manager, count for them and much more.
 
+In order to change the document it is needed to be modified "spreedsheetId" in the application.yml file.
+Note: Before starting the application it is needed that the spreedsheet to have created rows and have the same number and position of the column as the spreadsheet above.
 
-This can be modified by changing "spreedsheetId" in the application.yml file.
-
-Note: Before starting the application it is needed that the spreedsheet to have created rows and have the same number and postion of the column as the spreadsheet above.
